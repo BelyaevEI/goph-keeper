@@ -15,7 +15,7 @@ func New(userService *userservice.UserService) *Middlewares {
 	return &Middlewares{userService: userService}
 }
 
-func (middlewares *Middlewares) Authentication(h http.Handler) http.Handler {
+func (middlewares *Middlewares) Authentication(h http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 
 		ctx := request.Context()
