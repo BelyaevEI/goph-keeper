@@ -9,15 +9,15 @@ import (
 	"time"
 
 	"github.com/BelyaevEI/GophKeeper/client/internal/models"
-	"github.com/BelyaevEI/GophKeeper/client/internal/storage/postgresql"
+	"github.com/BelyaevEI/GophKeeper/client/internal/storage/userdb"
 	"golang.org/x/crypto/bcrypt"
 )
 
 type UserRepository struct {
-	db *postgresql.Postgresql
+	db *userdb.UserDB
 }
 
-func New(db *postgresql.Postgresql) *UserRepository {
+func New(db *userdb.UserDB) *UserRepository {
 	return &UserRepository{
 		db: db,
 	}

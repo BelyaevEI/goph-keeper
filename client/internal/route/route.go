@@ -17,5 +17,8 @@ func New(userservice *userservice.UserService,
 	route.Post("/api/user/registration", userservice.Registration)   // Registration new user
 	route.Post("/api/user/authorization", userservice.Authorization) // Authorization user
 
+	// CRUD handlers
+	route.Post("/api/user/authorization", middlewares.Authentication(dataservice.SaveData)) // Saving user data
+
 	return route
 }
