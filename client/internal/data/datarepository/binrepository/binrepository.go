@@ -6,7 +6,7 @@ import (
 	"encoding/binary"
 	"sync"
 
-	"github.com/BelyaevEI/GophKeeper/client/internal/models"
+	"github.com/BelyaevEI/GophKeeper/client/internal/models/binarymodels"
 	"github.com/BelyaevEI/GophKeeper/client/internal/storage/bindb"
 )
 
@@ -23,7 +23,7 @@ func New(db *bindb.Bindb) *BinRepository {
 
 func (br *BinRepository) SaveData(ctx context.Context, body []byte) error {
 
-	var data models.Binarydata
+	var data binarymodels.Binarydata
 
 	buffer := bytes.NewBuffer(body)
 
@@ -44,4 +44,37 @@ func (br *BinRepository) SaveData(ctx context.Context, body []byte) error {
 	}
 
 	return nil
+}
+
+func (bin *BinRepository) GetData(ctx context.Context, body []byte) ([]byte, error) {
+
+	var (
+		service binarymodels.Binarydata
+		buf     bytes.Buffer
+	)
+
+	buffer := bytes.NewBuffer(body)
+
+	// Deserializing binary data
+	if err := binary.Read(buffer, binary.LittleEndian, &service); err != nil {
+		return nil, err
+	}
+
+	// Locking for read data storage
+	bin.mutex.Lock()
+
+	defer bin.mutex.Unlock()
+
+	data, err := bin.db.GetBinary(ctx, service)
+	if err != nil {
+		return nil, err
+	}
+
+	// Serializing data for return
+	err = binary.Write(&buf, binary.LittleEndian, &data)
+	if err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+
 }

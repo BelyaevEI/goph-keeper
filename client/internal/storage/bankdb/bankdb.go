@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/BelyaevEI/GophKeeper/client/internal/models"
+	"github.com/BelyaevEI/GophKeeper/client/internal/models/bankmodels"
 )
 
 type Bankdb struct {
@@ -36,8 +36,19 @@ func NewConnect(dsn string) (*Bankdb, error) {
 
 }
 
-func (bank *Bankdb) SaveBank(ctx context.Context, data models.Bankdata) error {
+func (bank *Bankdb) SaveBank(ctx context.Context, data bankmodels.Bankdata) error {
 	_, err := bank.db.ExecContext(ctx, "INSERT INTO bank(userID, fullname, number, date, cvc, bankname, note)"+
 		"values($1, $2, $3, $4, $5, $6, $7)", data.UserID, data.Fullname, data.Number, data.Date, data.Cvc, data.Bankname, data.Note)
 	return err
+}
+
+func (bank *Bankdb) GetBankData(ctx context.Context, service bankmodels.Bankdata) (bankmodels.Bankdata, error) {
+
+	var data bankmodels.Bankdata
+
+	row := bank.db.QueryRowContext(ctx, "SELECT userID, bin, service, note FROM texts WHERE userID=$1 AND bankname=$2", service.UserID, service.Bankname)
+	if err := row.Scan(&data); err != nil {
+		return data, err
+	}
+	return data, nil
 }

@@ -6,7 +6,7 @@ import (
 	"encoding/binary"
 	"sync"
 
-	"github.com/BelyaevEI/GophKeeper/client/internal/models"
+	"github.com/BelyaevEI/GophKeeper/client/internal/models/passwordsmodels"
 	"github.com/BelyaevEI/GophKeeper/client/internal/storage/passwordsdb"
 )
 
@@ -23,7 +23,7 @@ func New(db *passwordsdb.Passwordsdb) *PasswordRepository {
 
 func (pass *PasswordRepository) SaveData(ctx context.Context, body []byte) error {
 
-	var data models.LRdata
+	var data passwordsmodels.LRdata
 
 	buffer := bytes.NewBuffer(body)
 
@@ -42,6 +42,37 @@ func (pass *PasswordRepository) SaveData(ctx context.Context, body []byte) error
 	if err != nil {
 		return err
 	}
-
 	return nil
+}
+
+func (pass *PasswordRepository) GetData(ctx context.Context, body []byte) ([]byte, error) {
+
+	var (
+		service passwordsmodels.LRdata
+		buf     bytes.Buffer
+	)
+
+	buffer := bytes.NewBuffer(body)
+
+	// Deserializing binary data
+	if err := binary.Read(buffer, binary.LittleEndian, &service); err != nil {
+		return nil, err
+	}
+
+	// Locking for read data storage
+	pass.mutex.Lock()
+
+	defer pass.mutex.Unlock()
+
+	data, err := pass.db.GetPassword(ctx, service)
+	if err != nil {
+		return nil, err
+	}
+
+	// Serializing data for return
+	err = binary.Write(&buf, binary.LittleEndian, &data)
+	if err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
 }
