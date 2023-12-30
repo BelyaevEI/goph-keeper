@@ -51,3 +51,12 @@ func (textsdb *Textsdb) GetTexts(ctx context.Context, service textsmodels.Textsd
 	return data, nil
 
 }
+
+func (passdb *Textsdb) UpdateText(ctx context.Context, data textsmodels.Textsdata) error {
+	_, err := passdb.db.Exec("UPDATE texts SET text = &1, note = $2 WHERE userID = $3 AND service = $4",
+		data.Text, data.Note, data.Note, data.UserID, data.Service)
+	if err != nil {
+		return err
+	}
+	return nil
+}

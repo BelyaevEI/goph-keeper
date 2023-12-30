@@ -46,9 +46,19 @@ func (bank *Bankdb) GetBankData(ctx context.Context, service bankmodels.Bankdata
 
 	var data bankmodels.Bankdata
 
-	row := bank.db.QueryRowContext(ctx, "SELECT userID, bin, service, note FROM texts WHERE userID=$1 AND bankname=$2", service.UserID, service.Bankname)
+	row := bank.db.QueryRowContext(ctx, "SELECT userID, fullname, number, date, cvc, bankname, note FROM bank WHERE userID=$1 AND bankname=$2",
+		service.UserID, service.Bankname)
 	if err := row.Scan(&data); err != nil {
 		return data, err
 	}
 	return data, nil
+}
+
+func (bank *Bankdb) UpdateBankData(ctx context.Context, data bankmodels.Bankdata) error {
+	_, err := bank.db.Exec("UPDATE bank SET fullname = &1, number = &2, date = $3, cvc = $4, note = $5 WHERE userID = $6 AND bankname = $7",
+		data.Fullname, data.Number, data.Date, data.Cvc, data.Note, data.UserID, data.Bankname)
+	if err != nil {
+		return err
+	}
+	return nil
 }

@@ -20,6 +20,6 @@ func New(userservice *userservice.UserService,
 	// CRUD handlers
 	route.Post("/api/data/create", middlewares.Authentication(dataservice.SaveData)) // Saving user data
 	route.Get("/api/data/read", middlewares.Authentication(dataservice.ReadData))    // Read user data
-
+	route.Put("/api/data/up", middlewares.Authentication(dataservice.UpdateData))    // Update user data
 	return route
 }

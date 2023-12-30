@@ -50,3 +50,12 @@ func (passdb *Passwordsdb) GetPassword(ctx context.Context, service passwordsmod
 	}
 	return data, nil
 }
+
+func (passdb *Passwordsdb) UpdatePassword(ctx context.Context, data passwordsmodels.LRdata) error {
+	_, err := passdb.db.Exec("UPDATE passwords SET login = &1, password = &2, note = $3 WHERE userID = $4 AND service = $5",
+		data.Login, data.Password, data.Note, data.UserID, data.Service)
+	if err != nil {
+		return err
+	}
+	return nil
+}

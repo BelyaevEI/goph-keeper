@@ -32,7 +32,7 @@ func NewConnect(dsn string) (*Bindb, error) {
 
 func (bindb *Bindb) SaveBin(ctx context.Context, data binarymodels.Binarydata) error {
 
-	_, err := bindb.db.ExecContext(ctx, "INSERT INTO texts(userID, bin, service, note)"+
+	_, err := bindb.db.ExecContext(ctx, "INSERT INTO binary(userID, bin, service, note)"+
 		"values($1, $2, $3, $4)", data.UserID, data.Bin, data.Service, data.Note)
 	return err
 }
@@ -41,9 +41,18 @@ func (bindb *Bindb) GetBinary(ctx context.Context, service binarymodels.Binaryda
 
 	var data binarymodels.Binarydata
 
-	row := bindb.db.QueryRowContext(ctx, "SELECT userID, bin, service, note FROM texts WHERE userID=$1 AND service=$2", service.UserID, service.Service)
+	row := bindb.db.QueryRowContext(ctx, "SELECT userID, bin, service, note FROM binary WHERE userID=$1 AND service=$2", service.UserID, service.Service)
 	if err := row.Scan(&data); err != nil {
 		return data, err
 	}
 	return data, nil
+}
+
+func (bindb *Bindb) UpdateBinary(ctx context.Context, data binarymodels.Binarydata) error {
+	_, err := bindb.db.Exec("UPDATE binary SET bin = &1, note = &2 WHERE userID = $3 AND service = $4",
+		data.Bin, data.Note, data.UserID, data.Service)
+	if err != nil {
+		return err
+	}
+	return nil
 }

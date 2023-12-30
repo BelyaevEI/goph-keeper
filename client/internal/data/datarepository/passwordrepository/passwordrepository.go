@@ -76,3 +76,26 @@ func (pass *PasswordRepository) GetData(ctx context.Context, body []byte) ([]byt
 	}
 	return buf.Bytes(), nil
 }
+
+func (pass *PasswordRepository) UpdateData(ctx context.Context, body []byte) error {
+
+	var data passwordsmodels.LRdata
+
+	buffer := bytes.NewBuffer(body)
+
+	// Deserializing binary data
+	if err := binary.Read(buffer, binary.LittleEndian, &data); err != nil {
+		return err
+	}
+
+	// Locking for read data storage
+	pass.mutex.Lock()
+
+	defer pass.mutex.Unlock()
+
+	if err := pass.db.UpdatePassword(ctx, data); err != nil {
+		return err
+	}
+
+	return nil
+}
