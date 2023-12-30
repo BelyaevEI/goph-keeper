@@ -6,7 +6,7 @@ import (
 	"encoding/binary"
 	"sync"
 
-	"github.com/BelyaevEI/GophKeeper/client/internal/models"
+	"github.com/BelyaevEI/GophKeeper/client/internal/models/bankmodels"
 	"github.com/BelyaevEI/GophKeeper/client/internal/storage/bankdb"
 )
 
@@ -22,7 +22,7 @@ func New(db *bankdb.Bankdb) *BankRepository {
 }
 
 func (bank *BankRepository) SaveData(ctx context.Context, body []byte) error {
-	var data models.Bankdata
+	var data bankmodels.Bankdata
 
 	buffer := bytes.NewBuffer(body)
 
@@ -43,4 +43,36 @@ func (bank *BankRepository) SaveData(ctx context.Context, body []byte) error {
 	}
 
 	return nil
+}
+
+func (bank *BankRepository) GetData(ctx context.Context, body []byte) ([]byte, error) {
+	var (
+		service bankmodels.Bankdata
+		buf     bytes.Buffer
+	)
+
+	buffer := bytes.NewBuffer(body)
+
+	// Deserializing binary data
+	if err := binary.Read(buffer, binary.LittleEndian, &service); err != nil {
+		return nil, err
+	}
+
+	// Locking for read data storage
+	bank.mutex.Lock()
+
+	defer bank.mutex.Unlock()
+
+	data, err := bank.db.GetBankData(ctx, service)
+	if err != nil {
+		return nil, err
+	}
+
+	// Serializing data for return
+	err = binary.Write(&buf, binary.LittleEndian, &data)
+	if err != nil {
+		return nil, err
+	}
+	return buf.Bytes(), nil
+
 }

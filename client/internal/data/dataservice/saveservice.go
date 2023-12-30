@@ -43,12 +43,13 @@ func (dataservice *DataService) SaveData(writer http.ResponseWriter, request *ht
 	// Getting data to save
 	body, err := io.ReadAll(request.Body)
 	if err != nil {
-		dataservice.log.Log.Error("read body from request is failed: ", err)
+		dataservice.log.Log.Error("reading body from request is failed: ", err)
 		writer.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
 	// Getting headers to define the data format
+	// Saving user's login/password of service
 	logins := request.Header["Login"]
 	if len(logins) > 0 {
 		err := dataservice.Passwordrepository.SaveData(ctx, body)
@@ -61,6 +62,7 @@ func (dataservice *DataService) SaveData(writer http.ResponseWriter, request *ht
 		return
 	}
 
+	// Saving user's text of service
 	texts := request.Header["Text"]
 	if len(texts) > 0 {
 		err := dataservice.Textrepository.SaveData(ctx, body)
@@ -73,6 +75,7 @@ func (dataservice *DataService) SaveData(writer http.ResponseWriter, request *ht
 		return
 	}
 
+	// Saving user's binary data of service
 	bins := request.Header["Bin"]
 	if len(bins) > 0 {
 		err := dataservice.Binrepository.SaveData(ctx, body)
@@ -85,6 +88,7 @@ func (dataservice *DataService) SaveData(writer http.ResponseWriter, request *ht
 		return
 	}
 
+	// Saving user's bank data of service
 	banks := request.Header["Bank"]
 	if len(banks) > 0 {
 		err := dataservice.Bankrepository.SaveData(ctx, body)
