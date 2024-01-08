@@ -59,3 +59,12 @@ func (passdb *Passwordsdb) UpdatePassword(ctx context.Context, data passwordsmod
 	}
 	return nil
 }
+
+func (passdb *Passwordsdb) DeletePassword(ctx context.Context, data passwordsmodels.LRdata) error {
+	_, err := passdb.db.Exec("DELETE FROM passwords WHERE userID = $1 AND service = $2",
+		data.UserID, data.Service)
+	if err != nil {
+		return err
+	}
+	return nil
+}

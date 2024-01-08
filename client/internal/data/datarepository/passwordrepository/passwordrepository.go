@@ -99,3 +99,25 @@ func (pass *PasswordRepository) UpdateData(ctx context.Context, body []byte) err
 
 	return nil
 }
+func (pass *PasswordRepository) DeleteData(ctx context.Context, body []byte) error {
+
+	var data passwordsmodels.LRdata
+
+	buffer := bytes.NewBuffer(body)
+
+	// Deserializing binary data
+	if err := binary.Read(buffer, binary.LittleEndian, &data); err != nil {
+		return err
+	}
+
+	// Locking for read data storage
+	pass.mutex.Lock()
+
+	defer pass.mutex.Unlock()
+
+	if err := pass.db.DeletePassword(ctx, data); err != nil {
+		return err
+	}
+
+	return nil
+}

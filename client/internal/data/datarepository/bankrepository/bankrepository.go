@@ -99,3 +99,26 @@ func (pass *BankRepository) UpdateData(ctx context.Context, body []byte) error {
 
 	return nil
 }
+
+func (pass *BankRepository) DeleteData(ctx context.Context, body []byte) error {
+
+	var data bankmodels.Bankdata
+
+	buffer := bytes.NewBuffer(body)
+
+	// Deserializing binary data
+	if err := binary.Read(buffer, binary.LittleEndian, &data); err != nil {
+		return err
+	}
+
+	// Locking for read data storage
+	pass.mutex.Lock()
+
+	defer pass.mutex.Unlock()
+
+	if err := pass.db.DeleteBankData(ctx, data); err != nil {
+		return err
+	}
+
+	return nil
+}

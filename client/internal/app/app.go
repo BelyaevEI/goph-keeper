@@ -36,7 +36,5 @@ func NewApp() (*app, error) {
 }
 
 func (a *app) RunServer() error {
-
 	return http.ListenAndServe(a.host+":"+a.port, a.route)
-
 }
