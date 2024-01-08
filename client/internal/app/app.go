@@ -5,16 +5,9 @@ import (
 
 	"github.com/BelyaevEI/GophKeeper/client/internal/initialization"
 	"github.com/BelyaevEI/GophKeeper/client/internal/logger"
-	"github.com/go-chi/chi"
 )
 
-type app struct {
-	host  string
-	port  string
-	route *chi.Mux
-}
-
-func NewApp() (*app, error) {
+func NewApp() (*http.Server, error) {
 
 	// Create connect to logger
 	log, err := logger.New()
@@ -28,13 +21,10 @@ func NewApp() (*app, error) {
 		return nil, err
 	}
 
-	return &app{
-		route: init.Route,
-		host:  init.Host,
-		port:  init.Port,
-	}, nil
-}
+	server := &http.Server{
+		Addr:    init.Host + ":" + init.Port,
+		Handler: init.Route,
+	}
 
-func (a *app) RunServer() error {
-	return http.ListenAndServe(a.host+":"+a.port, a.route)
+	return server, nil
 }
