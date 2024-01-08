@@ -93,14 +93,13 @@ func writeString(buf *bytes.Buffer, str string) error {
 
 // readString desiarilizing data from binary
 func readString(buf *bytes.Reader) (string, error) {
-	// Десериализуем длину строки
+
 	var length uint8
 	err := binary.Read(buf, binary.LittleEndian, &length)
 	if err != nil {
 		return "", err
 	}
 
-	// Десериализуем саму строку
 	strBytes := make([]byte, length)
 	err = binary.Read(buf, binary.LittleEndian, &strBytes)
 	if err != nil {

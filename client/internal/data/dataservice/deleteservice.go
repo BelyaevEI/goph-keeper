@@ -5,8 +5,8 @@ import (
 	"net/http"
 )
 
-// Reading user data
-func (dataservice *DataService) UpdateData(writer http.ResponseWriter, request *http.Request) {
+// Deleting user data
+func (dataservice *DataService) DeleteData(writer http.ResponseWriter, request *http.Request) {
 
 	ctx := request.Context()
 
@@ -18,10 +18,10 @@ func (dataservice *DataService) UpdateData(writer http.ResponseWriter, request *
 	}
 
 	// Getting headers to define the data format
-	// Updating user's login/passwords of service
+	// Deleting user's login/passwords of service
 	logins := request.Header["Login"]
 	if len(logins) > 0 {
-		if err := dataservice.Passwordrepository.UpdateData(ctx, body); err != nil {
+		if err := dataservice.Passwordrepository.DeleteData(ctx, body); err != nil {
 			dataservice.log.Log.Error("updating data is failed: ", err)
 			writer.WriteHeader(http.StatusBadRequest)
 			return
@@ -29,10 +29,10 @@ func (dataservice *DataService) UpdateData(writer http.ResponseWriter, request *
 		writer.WriteHeader(http.StatusOK)
 	}
 
-	// Updating user's text of service
+	// Deleting user's text of service
 	texts := request.Header["Text"]
 	if len(texts) > 0 {
-		if err := dataservice.Textrepository.UpdateData(ctx, body); err != nil {
+		if err := dataservice.Textrepository.DeleteData(ctx, body); err != nil {
 			dataservice.log.Log.Error("updating data is failed: ", err)
 			writer.WriteHeader(http.StatusBadRequest)
 			return
@@ -40,10 +40,10 @@ func (dataservice *DataService) UpdateData(writer http.ResponseWriter, request *
 		writer.WriteHeader(http.StatusOK)
 	}
 
-	// Updating user's bin data of service
+	// Deleting user's bin data of service
 	bins := request.Header["Bin"]
 	if len(bins) > 0 {
-		if err := dataservice.Binrepository.UpdateData(ctx, body); err != nil {
+		if err := dataservice.Binrepository.DeleteData(ctx, body); err != nil {
 			dataservice.log.Log.Error("updating data is failed: ", err)
 			writer.WriteHeader(http.StatusBadRequest)
 			return
@@ -51,10 +51,10 @@ func (dataservice *DataService) UpdateData(writer http.ResponseWriter, request *
 		writer.WriteHeader(http.StatusOK)
 	}
 
-	// Saving user's bank data of service
+	// Deleting user's bank data of service
 	banks := request.Header["Bank"]
 	if len(banks) > 0 {
-		if err := dataservice.Bankrepository.UpdateData(ctx, body); err != nil {
+		if err := dataservice.Bankrepository.DeleteData(ctx, body); err != nil {
 			dataservice.log.Log.Error("updating data is failed: ", err)
 			writer.WriteHeader(http.StatusBadRequest)
 			return

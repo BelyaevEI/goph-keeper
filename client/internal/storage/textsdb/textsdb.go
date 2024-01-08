@@ -60,3 +60,12 @@ func (passdb *Textsdb) UpdateText(ctx context.Context, data textsmodels.Textsdat
 	}
 	return nil
 }
+
+func (passdb *Textsdb) DeleteText(ctx context.Context, data textsmodels.Textsdata) error {
+	_, err := passdb.db.Exec("DELETE FROM texts WHERE userID = $1 AND service = $2",
+		data.UserID, data.Service)
+	if err != nil {
+		return err
+	}
+	return nil
+}

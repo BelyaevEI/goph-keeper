@@ -100,3 +100,26 @@ func (pass *TextRepository) UpdateData(ctx context.Context, body []byte) error {
 
 	return nil
 }
+
+func (pass *TextRepository) DeleteData(ctx context.Context, body []byte) error {
+
+	var data textsmodels.Textsdata
+
+	buffer := bytes.NewBuffer(body)
+
+	// Deserializing binary data
+	if err := binary.Read(buffer, binary.LittleEndian, &data); err != nil {
+		return err
+	}
+
+	// Locking for read data storage
+	pass.mutex.Lock()
+
+	defer pass.mutex.Unlock()
+
+	if err := pass.db.DeleteText(ctx, data); err != nil {
+		return err
+	}
+
+	return nil
+}

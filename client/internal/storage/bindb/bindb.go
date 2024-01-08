@@ -56,3 +56,12 @@ func (bindb *Bindb) UpdateBinary(ctx context.Context, data binarymodels.Binaryda
 	}
 	return nil
 }
+
+func (bindb *Bindb) DeleteBinary(ctx context.Context, data binarymodels.Binarydata) error {
+	_, err := bindb.db.Exec("DELETE FROM binary WHERE userID = $1 AND service = $2",
+		data.UserID, data.Service)
+	if err != nil {
+		return err
+	}
+	return nil
+}

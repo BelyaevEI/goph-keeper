@@ -62,3 +62,11 @@ func (bank *Bankdb) UpdateBankData(ctx context.Context, data bankmodels.Bankdata
 	}
 	return nil
 }
+
+func (bank *Bankdb) DeleteBankData(ctx context.Context, data bankmodels.Bankdata) error {
+	_, err := bank.db.Exec("DELETE FROM bank WHERE userID = $1 AND bankname = $2", data.UserID, data.Bankname)
+	if err != nil {
+		return err
+	}
+	return nil
+}

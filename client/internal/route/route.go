@@ -18,8 +18,9 @@ func New(userservice *userservice.UserService,
 	route.Post("/api/user/authorization", userservice.Authorization) // Authorization user
 
 	// CRUD handlers
-	route.Post("/api/data/create", middlewares.Authentication(dataservice.SaveData)) // Saving user data
-	route.Get("/api/data/read", middlewares.Authentication(dataservice.ReadData))    // Read user data
-	route.Put("/api/data/up", middlewares.Authentication(dataservice.UpdateData))    // Update user data
+	route.Post("/api/data/create", middlewares.Authentication(dataservice.SaveData))  // Saving user data
+	route.Get("/api/data/read", middlewares.Authentication(dataservice.ReadData))     // Read user data
+	route.Put("/api/data/up", middlewares.Authentication(dataservice.UpdateData))     // Update user data
+	route.Delete("/api/data/del", middlewares.Authentication(dataservice.DeleteData)) // Delete user data
 	return route
 }
