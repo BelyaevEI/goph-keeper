@@ -42,7 +42,6 @@ var readCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(readCmd)
 	createCmd.Flags().String("data", "", "data reading option(capital letter)")
-
 	createCmd.Flags().String("service", "", "reading user service")
 }
 
