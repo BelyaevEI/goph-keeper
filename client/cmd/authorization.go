@@ -13,10 +13,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// This command has two flags, login and password.
+// These flags are used to send data to the function for user authorization to the server.
 var authCmd = &cobra.Command{
 	Use:   "authorization",
-	Short: "information about the application build",
-	Long:  `information about the application build`,
+	Short: "authorization user in application",
+	Long:  `authorization user in application`,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		// Getting login and password for registation new user

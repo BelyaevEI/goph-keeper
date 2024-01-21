@@ -12,6 +12,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// This command sends the data to be saved to the server.
+// It is necessary to pass a flag that defines the format of the transmitted data.
 var createCmd = &cobra.Command{
 	Use:   "save",
 	Short: "save user data",

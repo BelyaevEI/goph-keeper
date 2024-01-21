@@ -13,6 +13,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// This command passes the name of the service to read data from the server.
+// It is necessary to pass a flag that defines the format of the transmitted data.
 var readCmd = &cobra.Command{
 	Use:   "read",
 	Short: "read user data",

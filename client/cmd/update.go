@@ -12,6 +12,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// This command transmits the data for updating to the servers.
+// It is necessary to pass a flag that defines the format of the transmitted data.
 var updateCmd = &cobra.Command{
 	Use:   "update",
 	Short: "update user data",
