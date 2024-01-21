@@ -12,6 +12,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// This command transmits the data to be deleted from the server.
+// It is necessary to pass a flag that defines the format of the transmitted data.
 var deleteCmd = &cobra.Command{
 	Use:   "delete",
 	Short: "delete user data",

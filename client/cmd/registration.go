@@ -13,6 +13,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Registration of a new user is carried out by transferring
+// a username and password to the command using flags
 var regCmd = &cobra.Command{
 	Use:   "registration",
 	Short: "registration new user",
